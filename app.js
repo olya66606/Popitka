@@ -423,8 +423,7 @@ document.addEventListener('DOMContentLoaded', function() {
        
         const categoryElement = document.getElementById(`${category}-reviews`);
         categoryElement.appendChild(reviewElement);
-        
-        и
+
         currentReviews[category].reviews.push(reviewElement);
         
        
