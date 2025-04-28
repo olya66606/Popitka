@@ -133,33 +133,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedImage = document.getElementById('selected-image');
     const itemName = document.getElementById('item-name');
     const itemPrice = document.getElementById('item-price');
+    const itemDesc = document.getElementById('item-desc');
+    const box = document.querySelector('.box');
 
+    // Устанавливаем первое блюдо как выбранное по умолчанию
+    const firstItem = menuItems[0];
+    selectedImage.src = firstItem.src;
+    selectedImage.alt = firstItem.alt;
+    itemName.textContent = firstItem.dataset.name;
+    itemPrice.textContent = `Цена: ${firstItem.dataset.price}₽`;
+    itemDesc.textContent = firstItem.dataset.desc;
+
+    // Показываем карусель после загрузки
     setTimeout(() => {
-        document.querySelector('.box').style.opacity = '1';
+        box.classList.add('loaded');
     }, 100);
 
     menuItems.forEach(item => {
-        item.addEventListener('click', (event) => { 
-           
+        item.addEventListener('click', (event) => {
+            // Плавное исчезновение текущей карточки
             selectedItemDiv.classList.remove('show');
             
+            // После завершения анимации исчезновения обновляем данные
             setTimeout(() => {
-                const itemNameValue = item.dataset.name;
-                const itemPriceValue = item.dataset.price;
-                const imageUrl = item.src;
+                selectedImage.src = item.src;
+                selectedImage.alt = item.alt;
+                itemName.textContent = item.dataset.name;
+                itemPrice.textContent = `Цена: ${item.dataset.price}₽`;
+                itemDesc.textContent = item.dataset.desc;
 
-                selectedImage.src = imageUrl;
-                itemName.textContent = itemNameValue;
-                itemPrice.textContent = `Цена: ${itemPriceValue}₽`;
-
-               
-                selectedItemDiv.classList.add('show');
-            }, 300); 
+                // Плавное появление обновленной карточки
+                setTimeout(() => {
+                    selectedItemDiv.classList.add('show');
+                }, 50);
+            }, 300);
         });
     });
       
+    // Закрываем при клике вне элемента
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.menu-item') && !e.target.closest('.selected-item')) {
+        if (!e.target.closest('.menu-item') && 
+            !e.target.closest('.selected-item') && 
+            selectedItemDiv.classList.contains('show')) {
             selectedItemDiv.classList.remove('show');
         }
     });
@@ -207,11 +222,11 @@ function startGame() {
 }
 
 function startTimer() {
-    document.getElementById("timer-cup").textContent = "Осталось " + timeLeft + " ";
+    document.getElementById("timer-cup").textContent = timeLeft ;
     clearInterval(timer);
     timer = setInterval(() => {
         timeLeft--;
-        document.getElementById("timer-cup").textContent = "Осталось " + timeLeft + " ";
+        document.getElementById("timer-cup").textContent = timeLeft;
         if (timeLeft <= 0) {
             clearInterval(timer);
             gameOver();
